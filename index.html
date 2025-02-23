@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo Browser FileReader API</title>
+    <script>
+      // Ensure the document can access the elements we want.
+      switch (document.readyState) {
+        case "loading":
+          // The document is loading, so attach our ready function.
+          document.addEventListener("DOMContentLoaded", demoInit);
+          break;
+        case "interactive": {
+          // The document is interactive, thus we can get the elements we want.
+          demoInit();
+          break;
+        }
+        case "complete":
+          // The document is complete, including styles, scripts, etc.
+          break;
+      }
+
+      function demoInit() {
+        // Get the demo input element which is the file picker.
+        const demoInputElement = document.getElementById("demoInput");
+
+        // Get the demo output element div where we'll set the text.
+        const demoOutputElement = document.getElementById("demoOutput");
+
+        // Add event listener for file selection
+        demoInputElement?.addEventListener("change", function (event) {
+          const file = event.target.files[0]; // Get the selected file
+          if (file) {
+            demoReadFile(file, demoOutputElement);
+          } else {
+            demoOutputElement.textContent = "No file selected.";
+          }
+        });
+      }
+
+      function demoReadFile(file, outputElement) {
+        // Create a browser FileReader API object.
+        const reader = new FileReader();
+
+        // FileReader onload event: called when the file is read.
+        reader.onload = function (event) {
+          const content = event.target.result; // Read the file content.
+          outputElement.textContent = content; // Show content in the output div.
+        };
+
+        // FileReader onerror event: called when there's an error reading the file.
+        reader.onerror = function () {
+          outputElement.textContent = "Error reading the file.";
+        };
+
+        // Read the file as text (you can also use other methods like readAsDataURL, etc.)
+        reader.readAsText(file);
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Demo Browser FileReader API</h1>
+    <form>
+      <input id="demoInput" type="file" />
+      <div id="demoOutput"></div>
+    </form>
+  </body>
+</html>
